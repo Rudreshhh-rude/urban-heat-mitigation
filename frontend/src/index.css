@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Geist', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: -0.01em;
+    background-color: #050507;
+    color: #9ca3af;
+    margin: 0;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, h4 {
+    letter-spacing: -0.02em;
+    font-weight: 600;
+  }
+}
+
+
+/* Premium Scientific Instrument Obscura Theme Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #050507;
+}
+::-webkit-scrollbar-thumb {
+  background: #16161f;
+  border: 1px solid #0e0e12;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #00f0ff;
+}
+
+/* Firefox Scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #16161f #050507;
+}
+
+/* Body styling moved to @layer base above */
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Structural Panel Base - Disciplined premium instrument styling */
+.cyber-panel {
+  background: #0e0e12;
+  border: 1px solid #16161f;
+  box-shadow: inset 0 0 12px rgba(0, 240, 255, 0.03);
+}
+
+.glow-text-telemetry {
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+}
+
+/* Tabular numeric font class for scientific decimal readouts */
+.font-mono-prec {
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-numeric: tabular-nums;
+}
