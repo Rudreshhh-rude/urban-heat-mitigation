@@ -6,7 +6,7 @@ The application utilizes a **Physics-Informed Machine Learning (PIML)** model to
 
 ---
 
-## 🛠️ Full-Stack Architecture
+##  Full-Stack Architecture
 
 ### 1. Backend Domain (`backend/`)
 *   **Biophysical Modeling**: PyTorch-based Multilayer Perceptron (`UrbanThermalMLP`) integrating observational measurements with thermodynamic balance constraints (Physics-Informed Loss penalties).
@@ -22,7 +22,7 @@ The application utilizes a **Physics-Informed Machine Learning (PIML)** model to
 
 ---
 
-## 🔬 Biophysical Boundary & Constraints Audit
+## Biophysical Boundary & Constraints Audit
 
 To ensure mathematical sanity, the ML model was audited under extreme input envelopes:
 *   **Extrapolation Breakdown**: Standard neural networks lack absolute physical bounds outside training support distributions. Under extreme sub-zero or high-heat inputs, predicted outputs can collapse into unphysical absolute-zero anomalies ($LST < 0\text{ K}$).
@@ -32,7 +32,7 @@ To ensure mathematical sanity, the ML model was audited under extreme input enve
 
 ---
 
-## 💻 Local Workspace Installation
+## Local Workspace Installation
 
 ### Prerequisites
 Make sure your computer has the following tools installed:
@@ -104,7 +104,7 @@ cd urban-heat-mitigation
 
 ---
 
-## 🚀 Committing and Pushing to GitHub
+## Committing and Pushing to GitHub
 
 To push new updates and refactored code to your remote repository, execute the following commands sequentially from the project root:
 
