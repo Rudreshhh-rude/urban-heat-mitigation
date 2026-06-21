@@ -24,7 +24,7 @@ def run_adversarial_audit():
 
     # 1. Verify model artifacts exist
     if not os.path.exists(config.MODEL_PATH) or not os.path.exists(config.SCALER_PATH):
-        print("❌ ERROR: Model weights or scaler parameters missing. Run train.py first.")
+        print("ERROR: Model weights or scaler parameters missing. Run train.py first.")
         sys.exit(1)
 
     # 2. Load model and scaler
@@ -34,7 +34,7 @@ def run_adversarial_audit():
     model = UrbanThermalMLP(input_dim=5)
     model.load_state_dict(torch.load(config.MODEL_PATH, map_location=torch.device('cpu')))
     model.eval()
-    print("✅ Model and Scaler structures successfully loaded into memory.")
+    print(" Model and Scaler structures successfully loaded into memory.")
 
     # 3. Define extreme boundary conditions
     # Features: [NDVI, Albedo, Building_Density, Air_Temp, Humidity]
@@ -73,7 +73,7 @@ def run_adversarial_audit():
         }
     }
 
-    print("\n🚀 Executing forward inferences on extreme input tensors...")
+    print("\nExecuting forward inferences on extreme input tensors...")
     print("--------------------------------------------------")
 
     for name, params in scenarios.items():
@@ -116,12 +116,12 @@ def run_adversarial_audit():
             reasons.append("Trivial mean collapse. Model ignores the temperature features and predicts the global average.")
 
         if flaw_detected:
-            print(f"   🚨 AUDIT FLAW DETECTED: {', '.join(reasons)}")
+            print(f"AUDIT FLAW DETECTED: {', '.join(reasons)}")
         else:
-            print("   ✅ PASS: Biophysical output checks out as plausible.")
+            print("PASS: Biophysical output checks out as plausible.")
         print("--------------------------------------------------")
 
-    print("\n🔒 Audit sequence finished.")
+    print("\nAudit sequence finished.")
 
 if __name__ == "__main__":
     run_adversarial_audit()

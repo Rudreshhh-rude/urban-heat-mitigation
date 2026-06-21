@@ -17,7 +17,7 @@ def test_integration():
             pass
             
     print("==================================================")
-    print("🚀 Running Backend End-to-End Integration Test...")
+    print("Running Backend End-to-End Integration Test...")
     print("==================================================")
     
     # 1. Verify files exist
@@ -28,13 +28,13 @@ def test_integration():
     files_ok = True
     for p in [parquet_path, model_path, scaler_path]:
         if not os.path.exists(p):
-            print(f"❌ CRITICAL ERROR: Required file '{p}' does not exist!")
+            print(f"CRITICAL ERROR: Required file '{p}' does not exist!")
             files_ok = False
             
     if not files_ok:
         sys.exit(1)
         
-    print("✅ PASS: Required dataset, model weights, and scaler files exist.")
+    print("PASS: Required dataset, model weights, and scaler files exist.")
     
     # 2. Load Parquet data and find a hotspot cell
     # A hotspot cell is defined here as the cell with the highest observed LST
@@ -50,7 +50,7 @@ def test_integration():
     temp_base = hotspot_row["Air_Temp"]
     hum_base = hotspot_row["Humidity"]
     
-    print(f"\n🌍 Target Hotspot Hexagon ID: {hex_id}")
+    print(f"\nTarget Hotspot Hexagon ID: {hex_id}")
     print(f"   Baseline Conditions:")
     print(f"     - Observed LST:      {actual_lst:.2f}°C")
     print(f"     - NDVI:              {ndvi_base:.4f}")
@@ -75,12 +75,12 @@ def test_integration():
         pred_lst = float(model(torch.tensor(features_scaled, dtype=torch.float32)).item())
         
     pred_delta = abs(actual_lst - pred_lst)
-    print(f"\n🔮 Model Inference Test:")
+    print(f"\nModel Inference Test:")
     print(f"     - Predicted LST:     {pred_lst:.2f}°C")
     print(f"     - Prediction Delta:  {pred_delta:.4f}°C")
     
     # 5. Run Genetic Optimization (50 generations)
-    print("\n🧬 Running multi-objective NSGA-II optimization sweep (50 generations)...")
+    print("\nRunning multi-objective NSGA-II optimization sweep (50 generations)...")
     pareto_front = optimize_cell_intervention(
         cell_data=hotspot_row,
         model=model,
@@ -89,10 +89,10 @@ def test_integration():
         pop_size=100
     )
     
-    print(f"✅ Optimization complete. Found {len(pareto_front)} unique solutions on the Pareto front.")
+    print(f"Optimization complete. Found {len(pareto_front)} unique solutions on the Pareto front.")
     
     if not pareto_front:
-        print("❌ CRITICAL ERROR: Pareto front is empty!")
+        print("CRITICAL ERROR: Pareto front is empty!")
         sys.exit(1)
         
     # 6. Identify the top-performing cooling strategy (maximum temperature drop)
@@ -120,16 +120,16 @@ def test_integration():
     print("==================================================")
     
     # 8. Physical Sanity Check
-    print("\n🕵️ Performing Physical Sanity Check...")
+    print("\nPerforming Physical Sanity Check...")
     if projected_drop <= 0.0:
-        print(f"❌ FAIL: Projected temperature drop is non-positive ({projected_drop:.2f}°C <= 0.0°C)!")
+        print(f"FAIL: Projected temperature drop is non-positive ({projected_drop:.2f}°C <= 0.0°C)!")
         sys.exit(1)
     elif projected_drop >= 15.0:
-        print(f"❌ FAIL: Projected temperature drop is unphysically large ({projected_drop:.2f}°C >= 15.0°C)!")
+        print(f"FAIL: Projected temperature drop is unphysically large ({projected_drop:.2f}°C >= 15.0°C)!")
         sys.exit(1)
     else:
-        print(f"✅ PASS: Projected temperature drop ({projected_drop:.2f}°C) is physically sound (between 0°C and 15°C).")
-        print("\n🎉 ALL BACKEND SYSTEMS ONLINE AND ready for production!")
+        print(f"PASS: Projected temperature drop ({projected_drop:.2f}°C) is physically sound (between 0°C and 15°C).")
+        print("\n ALL BACKEND SYSTEMS ONLINE AND ready for production!")
         print("==================================================")
         sys.exit(0)
 

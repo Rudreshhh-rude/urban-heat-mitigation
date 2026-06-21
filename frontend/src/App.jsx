@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Thermometer, 
-  Eye, 
-  Sliders, 
-  Cpu, 
-  Activity, 
-  RefreshCw, 
-  CheckCircle2, 
+import {
+  Thermometer,
+  Eye,
+  Sliders,
+  Cpu,
+  Activity,
+  RefreshCw,
+  CheckCircle2,
   AlertTriangle,
   Info,
   Layers,
@@ -25,7 +25,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000
 export default function App() {
   const [activeTab, setActiveTab] = useState('optimization'); // 'diagnostics' | 'optimization'
   const [activeLayer, setActiveLayer] = useState('lst'); // 'lst' | 'ndvi' | 'albedo' | 'building'
-  
+
   // Data State
   const [gridData, setGridData] = useState(null);
   const [isLoadingGrid, setIsLoadingGrid] = useState(true);
@@ -39,7 +39,6 @@ export default function App() {
   // Evolutionary parameters
   const [generations, setGenerations] = useState(50);
   const [population, setPopulation] = useState(100);
-  
   // Optimization process states
   const [isOptimizing, setIsOptimizing] = useState(false);
   const [currentGen, setCurrentGen] = useState(0);
@@ -109,7 +108,7 @@ export default function App() {
 
   const startLiveOptimization = () => {
     if (isOptimizing || !selectedCell) return;
-    
+
     setIsOptimizing(true);
     setCurrentGen(0);
     setBestCooling(0);
@@ -140,14 +139,14 @@ export default function App() {
         setCurrentGen(genId + 1);
         setBestCooling(bestCool);
         setParetoCount(pCount);
-        
+
         const logLine = `[GEN ${String(genId + 1).padStart(3, '0')}] Cool Drop: -${bestCool.toFixed(2)}°C | Pareto Count: ${pCount}`;
         setConsoleLogs(prev => [...prev, logLine]);
       } else if (data.status === "complete") {
         setParetoFront(data.pareto_front);
         setIsOptimizing(false);
         setConsoleLogs(prev => [
-          ...prev, 
+          ...prev,
           `[SYSTEM] Sweep completed. Discovered ${data.pareto_front.length} Pareto solutions.`,
           `[SYSTEM] Disconnecting live websocket.`
         ]);
@@ -215,17 +214,17 @@ export default function App() {
 
       {/* 2. Main Layout Grid */}
       <main className="flex-1 grid grid-cols-12 gap-4 p-4 h-[calc(100vh-64px)] overflow-hidden">
-        
+
         {/* ==================== LEFT COLUMN: GIS Layer Controls & Core Telemetry ==================== */}
         <section className="col-span-3 flex flex-col gap-4 h-full overflow-hidden">
-          
+
           {/* Card 1: Grid Telemetry */}
           <div className="cyber-panel p-4 flex flex-col max-h-[35%]">
             <h2 className="text-xs font-mono uppercase tracking-widest text-white border-b border-obsidian-carbon pb-2 mb-3 flex items-center gap-2 font-semibold">
               <Zap className="h-3.5 w-3.5 text-telemetry" />
               GRID AREA TELEMETRY
             </h2>
-            
+
             {isLoadingGrid ? (
               <div className="flex-1 flex items-center justify-center font-mono text-[10px] text-gray-600">
                 LOADING DATA STATE...
@@ -264,7 +263,7 @@ export default function App() {
               <Layers className="h-3.5 w-3.5 text-telemetry" />
               SPATIAL INTERACTION LAYERS
             </h2>
-            
+
             <div className="flex flex-col gap-2">
               {[
                 { id: 'lst', label: 'Land Surface Temp (LST)', unit: '°C', activeColor: 'text-plasma border-plasma/40 bg-plasma/5' },
@@ -277,11 +276,10 @@ export default function App() {
                   <button
                     key={layer.id}
                     onClick={() => setActiveLayer(layer.id)}
-                    className={`w-full flex items-center justify-between p-3 border text-left font-mono transition-all text-xs ${
-                      isActive 
-                        ? layer.activeColor 
+                    className={`w-full flex items-center justify-between p-3 border text-left font-mono transition-all text-xs ${isActive
+                        ? layer.activeColor
                         : 'border-obsidian-carbon bg-obsidian-void hover:border-gray-700 text-gray-400'
-                    }`}
+                      }`}
                   >
                     <span>{layer.label}</span>
                     <span className="text-[9px] text-gray-500 font-semibold uppercase">{layer.unit}</span>
@@ -309,7 +307,7 @@ export default function App() {
                 </div>
               </div>
             )}
-            
+
             <div className="mt-auto bg-obsidian-void p-3 border border-obsidian-carbon text-[10px] font-mono leading-normal">
               <div className="text-white font-bold flex items-center gap-1.5 mb-1 text-xs">
                 <Database className="h-3 w-3 text-telemetry" />
@@ -334,7 +332,7 @@ export default function App() {
               PROJ: <span className="text-white">EPSG:4326 // H3-HEX</span>
             </div>
           </div>
-          
+
           {/* Map canvas containing real Maplibre Map */}
           <div className="flex-1 relative bg-obsidian-void">
             {isLoadingGrid ? (
@@ -348,7 +346,7 @@ export default function App() {
                 FAILED TO RESOLVE GRID COMPONENT INTERFACE
               </div>
             ) : (
-              <MapComponent 
+              <MapComponent
                 gridData={gridData}
                 activeLayer={activeLayer}
                 selectedCellId={selectedCell ? selectedCell.H3_Index_ID : null}
@@ -368,30 +366,28 @@ export default function App() {
         <section className="col-span-3 cyber-panel p-4 flex flex-col h-full overflow-hidden">
           {/* Tab Selection Header */}
           <div className="flex border-b border-obsidian-carbon relative mb-4 p-1 bg-obsidian-void border border-obsidian-carbon rounded">
-            <button 
+            <button
               onClick={() => setActiveTab('diagnostics')}
-              className={`flex-1 py-1.5 text-[10px] font-mono uppercase tracking-wider relative transition-colors z-10 font-bold ${
-                activeTab === 'diagnostics' ? 'text-black' : 'text-gray-400 hover:text-white'
-              }`}
+              className={`flex-1 py-1.5 text-[10px] font-mono uppercase tracking-wider relative transition-colors z-10 font-bold ${activeTab === 'diagnostics' ? 'text-black' : 'text-gray-400 hover:text-white'
+                }`}
             >
               Manual Diagnostics
               {activeTab === 'diagnostics' && (
-                <motion.div 
+                <motion.div
                   layoutId="active-tab-bg"
                   className="absolute inset-0 bg-telemetry rounded-sm -z-10"
                   transition={{ type: 'spring', stiffness: 450, damping: 35 }}
                 />
               )}
             </button>
-            <button 
+            <button
               onClick={() => setActiveTab('optimization')}
-              className={`flex-1 py-1.5 text-[10px] font-mono uppercase tracking-wider relative transition-colors z-10 font-bold ${
-                activeTab === 'optimization' ? 'text-black' : 'text-gray-400 hover:text-white'
-              }`}
+              className={`flex-1 py-1.5 text-[10px] font-mono uppercase tracking-wider relative transition-colors z-10 font-bold ${activeTab === 'optimization' ? 'text-black' : 'text-gray-400 hover:text-white'
+                }`}
             >
               Evolutionary Optimization
               {activeTab === 'optimization' && (
-                <motion.div 
+                <motion.div
                   layoutId="active-tab-bg"
                   className="absolute inset-0 bg-telemetry rounded-sm -z-10"
                   transition={{ type: 'spring', stiffness: 450, damping: 35 }}
@@ -427,11 +423,11 @@ export default function App() {
                         <span className="text-gray-400">Δ NDVI (Green Space)</span>
                         <span className="text-isotope font-bold">+{deltaNdvi.toFixed(2)}</span>
                       </div>
-                      <input 
-                        type="range" 
-                        min="0.00" 
-                        max="0.50" 
-                        step="0.01" 
+                      <input
+                        type="range"
+                        min="0.00"
+                        max="0.50"
+                        step="0.01"
                         value={deltaNdvi}
                         onChange={(e) => {
                           setDeltaNdvi(parseFloat(e.target.value));
@@ -447,11 +443,11 @@ export default function App() {
                         <span className="text-gray-400">Δ Albedo (Reflective Surface)</span>
                         <span className="text-telemetry font-bold">+{deltaAlbedo.toFixed(2)}</span>
                       </div>
-                      <input 
-                        type="range" 
-                        min="0.00" 
-                        max="0.40" 
-                        step="0.01" 
+                      <input
+                        type="range"
+                        min="0.00"
+                        max="0.40"
+                        step="0.01"
                         value={deltaAlbedo}
                         onChange={(e) => {
                           setDeltaAlbedo(parseFloat(e.target.value));
@@ -467,7 +463,7 @@ export default function App() {
                     <h3 className="text-[10px] font-mono uppercase text-gray-500 border-b border-obsidian-carbon pb-1.5 mb-1.5 font-bold">
                       PROJECTIONS UNDER STATED INTERVENTIONS
                     </h3>
-                    
+
                     <div className="flex items-center justify-between text-xs font-mono">
                       <span>Calculated Cooling LST:</span>
                       <span className="text-white font-bold text-sm font-mono-prec">-{calcCooling}°C</span>
@@ -518,11 +514,11 @@ export default function App() {
                         <span className="text-gray-400">Max Generations</span>
                         <span className="text-white font-bold font-mono-prec">{generations}</span>
                       </div>
-                      <input 
-                        type="range" 
-                        min="10" 
-                        max="100" 
-                        step="5" 
+                      <input
+                        type="range"
+                        min="10"
+                        max="100"
+                        step="5"
                         value={generations}
                         disabled={isOptimizing}
                         onChange={(e) => setGenerations(parseInt(e.target.value))}
@@ -536,11 +532,11 @@ export default function App() {
                         <span className="text-gray-400">Population Size</span>
                         <span className="text-white font-bold font-mono-prec">{population}</span>
                       </div>
-                      <input 
-                        type="range" 
-                        min="50" 
-                        max="200" 
-                        step="10" 
+                      <input
+                        type="range"
+                        min="50"
+                        max="200"
+                        step="10"
                         value={population}
                         disabled={isOptimizing}
                         onChange={(e) => setPopulation(parseInt(e.target.value))}
@@ -563,14 +559,14 @@ export default function App() {
                             <span>GEN ITERATION:</span>
                             <span className="text-telemetry font-bold">{currentGen} / {generations}</span>
                           </div>
-                          
+
                           <div className="w-full bg-obsidian-carbon h-1.5 border border-obsidian-carbon">
-                            <div 
+                            <div
                               className="bg-telemetry h-full transition-all duration-300"
                               style={{ width: `${(currentGen / generations) * 100}%` }}
                             />
                           </div>
-                          
+
                           <div className="flex justify-between text-[11px]">
                             <span>PEAK COOLING:</span>
                             <span className="text-plasma font-bold font-mono-prec">-{bestCooling.toFixed(2)}°C</span>
@@ -587,7 +583,7 @@ export default function App() {
                             <Terminal className="h-3 w-3 text-telemetry" />
                             Active Compute Log Output
                           </div>
-                          <div 
+                          <div
                             ref={logTerminalRef}
                             className="flex-1 overflow-y-auto font-mono text-[9px] text-isotope leading-relaxed space-y-0.5 select-text scrollbar-thin"
                           >
@@ -597,7 +593,7 @@ export default function App() {
                           </div>
                         </div>
 
-                        <button 
+                        <button
                           onClick={cancelOptimization}
                           className="w-full py-2 bg-crimson hover:bg-red-700 text-white font-mono text-xs font-bold uppercase tracking-wider transition-colors mt-3"
                         >
@@ -610,7 +606,7 @@ export default function App() {
                           <div className="flex-1 flex flex-col gap-2 overflow-hidden mb-3">
                             {/* Live SVG Pareto frontier chart */}
                             <div className="flex-1 min-h-[180px]">
-                              <ParetoPlot 
+                              <ParetoPlot
                                 paretoFront={paretoFront}
                                 selectedStrategy={selectedStrategy}
                                 onSelectStrategy={handleSelectStrategy}
@@ -624,7 +620,7 @@ export default function App() {
                           </div>
                         )}
 
-                        <button 
+                        <button
                           onClick={startLiveOptimization}
                           disabled={!selectedCell}
                           className="w-full py-2.5 bg-telemetry hover:bg-cyan-400 text-black font-mono text-xs font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50"
