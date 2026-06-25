@@ -3,6 +3,10 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 from contextlib import asynccontextmanager
+import logging
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
+logger = logging.getLogger("server")
 import json
 import pandas as pd
 import geopandas as gpd
@@ -75,9 +79,18 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 # Enable CORS for frontend workspace access
+allowed_origins_env = os.getenv("ALLOWED_ORIGINS")
+if allowed_origins_env:
+    allowed_origins = [origin.strip() for origin in allowed_origins_env.split(",") if origin.strip()]
+else:
+    allowed_origins = [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173"
+    ]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -162,9 +175,9 @@ async def optimize_live(websocket: WebSocket):
     except WebSocketDisconnect:
         print("[WS] Client disconnected cleanly.")
     except Exception as e:
-        print(f"[WS ERROR] Exception in WebSocket connection: {str(e)}")
+        logger.error(f"[WS ERROR] Exception in WebSocket connection: {str(e)}", exc_info=True)
         try:
-            await websocket.send_json({"error": str(e)})
+            await websocket.send_json({"error": "Internal simulation engine error occurred"})
         except:
             pass
     finally:

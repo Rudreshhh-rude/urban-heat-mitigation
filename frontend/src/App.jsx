@@ -218,7 +218,7 @@ export default function App() {
               </div>
             ) : gridError ? (
               <div className="flex-1 flex items-center justify-center font-mono text-[10px] text-crimson gap-1">
-                <AlertTriangle className="h-4 w-4" /> LOAD FAILED: {gridError}
+                [ERROR] LOAD FAILED: {gridError}
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-3 flex-1">
