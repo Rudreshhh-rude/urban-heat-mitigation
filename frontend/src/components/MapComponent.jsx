@@ -102,7 +102,7 @@ const MapComponent = React.memo(function MapComponent({ gridData, activeLayer, s
       type: 'line',
       source: 'h3-grid',
       paint: {
-        'line-color': '#16161f',
+        'line-color': '#27272a',
         'line-width': 0.75,
         'line-opacity': 0.9
       }
@@ -114,7 +114,7 @@ const MapComponent = React.memo(function MapComponent({ gridData, activeLayer, s
       type: 'line',
       source: 'h3-grid',
       paint: {
-        'line-color': '#00f0ff',
+        'line-color': '#d97706',
         'line-width': 2.5,
         'line-opacity': 1.0
       },

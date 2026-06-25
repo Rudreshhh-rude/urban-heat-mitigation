@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - PARQUET_PATH=h3_city_features.parquet
+      - GEOJSON_PATH=bengaluru_h3_grid.geojson
+      - MODEL_PATH=piml_urban_model.pt
+      - SCALER_PATH=scaler.pkl
+    restart: always
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    restart: always

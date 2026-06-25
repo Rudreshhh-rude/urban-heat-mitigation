@@ -57,7 +57,7 @@ const ParetoPlot = React.memo(function ParetoPlot({ paretoFront, selectedStrateg
         <span className="text-[9px] font-mono uppercase tracking-wider text-gray-500 font-bold">
           Pareto Trade-Off Frontier
         </span>
-        <span className="text-[9px] font-mono text-isotope">
+        <span className="text-[9px] font-mono text-telemetry">
           OPTIMAL OPTIONS: {paretoFront.length}
         </span>
       </div>
@@ -71,7 +71,7 @@ const ParetoPlot = React.memo(function ParetoPlot({ paretoFront, selectedStrateg
             y1={margin.top}
             x2={getX(val)}
             y2={height - margin.bottom}
-            stroke="#16161f"
+            stroke="#27272a"
             strokeWidth="0.5"
           />
         ))}
@@ -82,7 +82,7 @@ const ParetoPlot = React.memo(function ParetoPlot({ paretoFront, selectedStrateg
             y1={getY(val)}
             x2={width - margin.right}
             y2={getY(val)}
-            stroke="#16161f"
+            stroke="#27272a"
             strokeWidth="0.5"
           />
         ))}
@@ -93,7 +93,7 @@ const ParetoPlot = React.memo(function ParetoPlot({ paretoFront, selectedStrateg
           y1={height - margin.bottom}
           x2={width - margin.right}
           y2={height - margin.bottom}
-          stroke="#2e303a"
+          stroke="#27272a"
           strokeWidth="1"
         />
         <line
@@ -101,7 +101,7 @@ const ParetoPlot = React.memo(function ParetoPlot({ paretoFront, selectedStrateg
           y1={margin.top}
           x2={margin.left}
           y2={height - margin.bottom}
-          stroke="#2e303a"
+          stroke="#27272a"
           strokeWidth="1"
         />
 
@@ -113,13 +113,13 @@ const ParetoPlot = React.memo(function ParetoPlot({ paretoFront, selectedStrateg
               y1={height - margin.bottom}
               x2={getX(val)}
               y2={height - margin.bottom + 4}
-              stroke="#2e303a"
+              stroke="#27272a"
               strokeWidth="1"
             />
             <text
               x={getX(val)}
               y={height - margin.bottom + 15}
-              fill="#6b7280"
+              fill="#71717a"
               fontSize="8"
               className="font-mono"
               textAnchor="middle"
@@ -137,13 +137,13 @@ const ParetoPlot = React.memo(function ParetoPlot({ paretoFront, selectedStrateg
               y1={getY(val)}
               x2={margin.left}
               y2={getY(val)}
-              stroke="#2e303a"
+              stroke="#27272a"
               strokeWidth="1"
             />
             <text
               x={margin.left - 8}
               y={getY(val) + 3}
-              fill="#6b7280"
+              fill="#71717a"
               fontSize="8"
               className="font-mono"
               textAnchor="end"
@@ -157,7 +157,7 @@ const ParetoPlot = React.memo(function ParetoPlot({ paretoFront, selectedStrateg
         <text
           x={margin.left + (width - margin.left - margin.right) / 2}
           y={height - 5}
-          fill="#9ca3af"
+          fill="#f4f4f5"
           fontSize="9"
           className="font-mono"
           textAnchor="middle"
@@ -169,7 +169,7 @@ const ParetoPlot = React.memo(function ParetoPlot({ paretoFront, selectedStrateg
         <text
           x={10}
           y={margin.top + (height - margin.top - margin.bottom) / 2}
-          fill="#9ca3af"
+          fill="#f4f4f5"
           fontSize="9"
           className="font-mono"
           textAnchor="middle"
@@ -184,7 +184,7 @@ const ParetoPlot = React.memo(function ParetoPlot({ paretoFront, selectedStrateg
           <path
             d={linePathD}
             fill="none"
-            stroke="#16161f"
+            stroke="#27272a"
             strokeWidth="1.5"
           />
         )}
@@ -192,7 +192,7 @@ const ParetoPlot = React.memo(function ParetoPlot({ paretoFront, selectedStrateg
           <path
             d={linePathD}
             fill="none"
-            stroke="#00f0ff"
+            stroke="#d97706"
             strokeWidth="1"
             strokeDasharray="2,3"
             opacity="0.7"
@@ -221,7 +221,7 @@ const ParetoPlot = React.memo(function ParetoPlot({ paretoFront, selectedStrateg
                   cy={cy}
                   r={isSelected ? 7 : 6}
                   fill="none"
-                  stroke={isSelected ? '#39ff14' : '#00f0ff'}
+                  stroke="#d97706"
                   strokeWidth="1.5"
                   opacity={isSelected ? 1.0 : 0.6}
                 />
@@ -232,8 +232,8 @@ const ParetoPlot = React.memo(function ParetoPlot({ paretoFront, selectedStrateg
                 cx={cx}
                 cy={cy}
                 r="3.5"
-                fill={isSelected ? '#39ff14' : pt.lst_drop > 12.0 ? '#de0a26' : '#ff5a00'}
-                stroke={isHovered ? '#ffffff' : '#0e0e12'}
+                fill={isSelected ? '#d97706' : '#71717a'}
+                stroke={isHovered ? '#f4f4f5' : '#18181b'}
                 strokeWidth="1"
                 onMouseEnter={() => setHoveredPoint(pt)}
                 onMouseLeave={() => setHoveredPoint(null)}
@@ -257,8 +257,20 @@ const ParetoPlot = React.memo(function ParetoPlot({ paretoFront, selectedStrateg
                   <span className="text-white font-bold font-mono">-{data.lst_drop.toFixed(2)}°C</span>
                 </div>
                 <div>
-                  <span className="text-gray-500">COST:</span>{' '}
-                  <span className="text-white font-bold font-mono">{data.cost.toFixed(2)} Cr</span>
+                  <span className="text-gray-500">CAPEX:</span>{' '}
+                  <span className="text-white font-bold font-mono">
+                    {data.estimated_capex_inr !== undefined
+                      ? `₹${(data.estimated_capex_inr / 1e7).toFixed(2)} Cr`
+                      : `${data.cost.toFixed(2)} Cr`}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-gray-500">PAYBACK:</span>{' '}
+                  <span className="text-yellow-400 font-bold font-mono">
+                    {data.annual_energy_savings_inr && data.annual_energy_savings_inr > 0
+                      ? `${(data.estimated_capex_inr / data.annual_energy_savings_inr).toFixed(1)} Yr`
+                      : 'N/A'}
+                  </span>
                 </div>
                 <div className="flex gap-2">
                   <span className="text-isotope font-mono">ΔN: +{data.delta_ndvi.toFixed(2)}</span>

@@ -1,21 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  Thermometer,
-  Eye,
-  Sliders,
-  Cpu,
-  Activity,
-  RefreshCw,
-  CheckCircle2,
-  AlertTriangle,
-  Info,
-  Layers,
-  Zap,
-  Target,
-  Database,
-  Terminal
-} from 'lucide-react';
+// Lucide icons removed for flat clean UI
 
 import MapComponent from './components/MapComponent';
 import ParetoPlot from './components/ParetoPlot';
@@ -122,7 +107,13 @@ export default function App() {
       `[SYSTEM] Target Index: ${selectedCell.H3_Index_ID}`
     ]);
 
-    const wsUrl = API_BASE_URL.replace(/^http/, 'ws') + '/optimize-live';
+    let wsUrl;
+    if (API_BASE_URL.startsWith('http')) {
+      wsUrl = API_BASE_URL.replace(/^http/, 'ws') + '/optimize-live';
+    } else {
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      wsUrl = `${protocol}//${window.location.host}${API_BASE_URL}/optimize-live`;
+    }
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
 
@@ -181,9 +172,6 @@ export default function App() {
       {/* 1. Header Area - Disciplined scientific observatory styling */}
       <header className="h-16 border-b border-obsidian-carbon px-6 bg-obsidian-charcoal flex items-center justify-between select-none">
         <div className="flex items-center gap-4">
-          <div className="flex items-center justify-center h-8 w-8 bg-obsidian-void border border-telemetry/40 rounded">
-            <Activity className="h-4.5 w-4.5 text-telemetry" />
-          </div>
           <div>
             <h1 className="text-sm font-mono tracking-widest text-white font-semibold">
               BENGALURU URBAN THERMAL OBSERVATORY
@@ -195,19 +183,19 @@ export default function App() {
         </div>
 
         {/* Global connection/status telemetry */}
-        <div className="flex items-center gap-6 font-mono text-[11px] tracking-wider">
+        <div className="flex items-center gap-6 font-mono text-[10px] tracking-wider text-zinc-500">
           <div className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-isotope animate-pulse" />
-            <span className="text-gray-500">CORE ENGINE:</span>
-            <span className="text-isotope font-semibold">STABLE</span>
+            <span className="h-1.5 w-1.5 bg-zinc-500" />
+            <span>CORE ENGINE:</span>
+            <span className="text-zinc-300 font-semibold">STABLE</span>
           </div>
           <div className="h-4 w-px bg-obsidian-carbon" />
-          <div className="text-gray-500">
-            SYSTEM ADDR: <span className="text-white">127.0.0.1:8000</span>
+          <div>
+            SYS_NODE: <span className="text-zinc-300 font-semibold">BGLR_01</span>
           </div>
           <div className="h-4 w-px bg-obsidian-carbon" />
-          <div className="text-gray-500">
-            LATENCY: <span className="text-telemetry">14ms</span>
+          <div>
+            LATENCY: <span className="text-zinc-300 font-semibold">14ms</span>
           </div>
         </div>
       </header>
@@ -220,8 +208,7 @@ export default function App() {
 
           {/* Card 1: Grid Telemetry */}
           <div className="cyber-panel p-4 flex flex-col max-h-[35%]">
-            <h2 className="text-xs font-mono uppercase tracking-widest text-white border-b border-obsidian-carbon pb-2 mb-3 flex items-center gap-2 font-semibold">
-              <Zap className="h-3.5 w-3.5 text-telemetry" />
+            <h2 className="text-xs font-mono uppercase tracking-widest text-white border-b border-obsidian-carbon pb-2 mb-3 font-semibold">
               GRID AREA TELEMETRY
             </h2>
 
@@ -250,7 +237,7 @@ export default function App() {
                 <div className="bg-obsidian-void p-3 border border-obsidian-carbon flex flex-col justify-between">
                   <span className="text-[9px] font-mono text-gray-500 uppercase">Quality Gate</span>
                   <span className="text-xs font-mono font-bold text-isotope flex items-center gap-1 mt-2">
-                    <CheckCircle2 className="h-3.5 w-3.5 inline" /> PASSED
+                    PASSED
                   </span>
                 </div>
               </div>
@@ -259,8 +246,7 @@ export default function App() {
 
           {/* Card 2: Interactive Spatial Layers */}
           <div className="cyber-panel p-4 flex flex-col flex-1 overflow-hidden">
-            <h2 className="text-xs font-mono uppercase tracking-widest text-white border-b border-obsidian-carbon pb-2 mb-4 flex items-center gap-2 font-semibold">
-              <Layers className="h-3.5 w-3.5 text-telemetry" />
+            <h2 className="text-xs font-mono uppercase tracking-widest text-white border-b border-obsidian-carbon pb-2 mb-4 font-semibold">
               SPATIAL INTERACTION LAYERS
             </h2>
 
@@ -309,8 +295,7 @@ export default function App() {
             )}
 
             <div className="mt-auto bg-obsidian-void p-3 border border-obsidian-carbon text-[10px] font-mono leading-normal">
-              <div className="text-white font-bold flex items-center gap-1.5 mb-1 text-xs">
-                <Database className="h-3 w-3 text-telemetry" />
+              <div className="text-white font-bold mb-1 text-xs">
                 Physical Model Constraints
               </div>
               Physics-Informed Loss penalties align empirical LST updates with localized thermodynamic balance equations.
@@ -322,8 +307,7 @@ export default function App() {
         <section className="col-span-6 cyber-panel relative h-full flex flex-col overflow-hidden">
           <div className="h-10 border-b border-obsidian-carbon px-4 bg-obsidian-charcoal flex items-center justify-between font-mono text-[10px] select-none text-gray-500">
             <div className="flex items-center gap-4">
-              <span className="text-white font-bold flex items-center gap-1">
-                <Layers className="h-3.5 w-3.5 text-telemetry" />
+              <span className="text-white font-bold">
                 GIS SPATIAL OBSERVATION CANVAS
               </span>
               {selectedCell && <span>SELECTED HEX: {selectedCell.H3_Index_ID}</span>}
@@ -337,12 +321,10 @@ export default function App() {
           <div className="flex-1 relative bg-obsidian-void">
             {isLoadingGrid ? (
               <div className="absolute inset-0 flex flex-col items-center justify-center font-mono text-[11px] text-gray-500 bg-obsidian-void">
-                <RefreshCw className="h-6 w-6 text-telemetry animate-spin mb-2" />
                 LOADING SPATIAL HEXAGON GRID LAYER...
               </div>
             ) : gridError ? (
               <div className="absolute inset-0 flex flex-col items-center justify-center font-mono text-[11px] text-crimson bg-obsidian-void">
-                <AlertTriangle className="h-8 w-8 text-crimson mb-2" />
                 FAILED TO RESOLVE GRID COMPONENT INTERFACE
               </div>
             ) : (
@@ -356,7 +338,7 @@ export default function App() {
 
             {/* Render Indicator Overlay */}
             <div className="absolute bottom-4 right-4 z-10 bg-obsidian-charcoal border border-obsidian-carbon px-2.5 py-1.5 font-mono text-[9px] text-isotope tracking-wider flex items-center gap-1.5 font-bold">
-              <span className="h-1.5 w-1.5 rounded-full bg-isotope animate-pulse" />
+              <span className="h-1.5 w-1.5 bg-isotope" />
               MAP ENGINE DISPATCHED
             </div>
           </div>
@@ -365,7 +347,7 @@ export default function App() {
         {/* ==================== RIGHT COLUMN: Control Panel & Live Pareto Front Chart ==================== */}
         <section className="col-span-3 cyber-panel p-4 flex flex-col h-full overflow-hidden">
           {/* Tab Selection Header */}
-          <div className="flex border-b border-obsidian-carbon relative mb-4 p-1 bg-obsidian-void border border-obsidian-carbon rounded">
+          <div className="flex border-b border-obsidian-carbon relative mb-4 p-1 bg-obsidian-void border border-obsidian-carbon">
             <button
               onClick={() => setActiveTab('diagnostics')}
               className={`flex-1 py-1.5 text-[10px] font-mono uppercase tracking-wider relative transition-colors z-10 font-bold ${activeTab === 'diagnostics' ? 'text-black' : 'text-gray-400 hover:text-white'
@@ -375,7 +357,7 @@ export default function App() {
               {activeTab === 'diagnostics' && (
                 <motion.div
                   layoutId="active-tab-bg"
-                  className="absolute inset-0 bg-telemetry rounded-sm -z-10"
+                  className="absolute inset-0 bg-telemetry -z-10"
                   transition={{ type: 'spring', stiffness: 450, damping: 35 }}
                 />
               )}
@@ -389,7 +371,7 @@ export default function App() {
               {activeTab === 'optimization' && (
                 <motion.div
                   layoutId="active-tab-bg"
-                  className="absolute inset-0 bg-telemetry rounded-sm -z-10"
+                  className="absolute inset-0 bg-telemetry -z-10"
                   transition={{ type: 'spring', stiffness: 450, damping: 35 }}
                 />
               )}
@@ -409,8 +391,7 @@ export default function App() {
                   className="flex-1 flex flex-col gap-4"
                 >
                   <div className="bg-obsidian-void p-3 border border-obsidian-carbon">
-                    <h3 className="text-xs font-mono uppercase text-white font-bold mb-1 flex items-center gap-1.5">
-                      <Sliders className="h-3.5 w-3.5 text-telemetry" />
+                    <h3 className="text-xs font-mono uppercase text-white font-bold mb-1">
                       CO-EFFICIENT SWEEPS
                     </h3>
                     <p className="text-[10px] font-mono text-gray-500 leading-normal mb-3">
@@ -479,12 +460,12 @@ export default function App() {
                     <div className="mt-auto">
                       <div className="text-[10px] font-mono text-gray-500 mb-1">THERMODYNAMIC CONSTRAINT STATUS:</div>
                       {isPhysicallyStable ? (
-                        <div className="p-2 border border-isotope/30 bg-isotope/5 text-isotope font-mono text-[11px] font-bold flex items-center gap-1.5">
-                          <CheckCircle2 className="h-4 w-4" /> CONSTRAINTS STABILIZED
+                        <div className="p-2 border border-isotope/30 bg-isotope/5 text-isotope font-mono text-[11px] font-bold">
+                          CONSTRAINTS STABILIZED
                         </div>
                       ) : (
-                        <div className="p-2 border border-crimson/30 bg-crimson/5 text-crimson font-mono text-[11px] font-bold flex items-center gap-1.5">
-                          <AlertTriangle className="h-4 w-4" /> CRITICAL THERMAL BOUNDARY REACHED
+                        <div className="p-2 border border-crimson/30 bg-crimson/5 text-crimson font-mono text-[11px] font-bold">
+                          CRITICAL THERMAL BOUNDARY REACHED
                         </div>
                       )}
                     </div>
@@ -500,8 +481,7 @@ export default function App() {
                   className="flex-1 flex flex-col gap-4 overflow-hidden"
                 >
                   <div className="bg-obsidian-void p-3 border border-obsidian-carbon">
-                    <h3 className="text-xs font-mono uppercase text-white font-bold mb-1 flex items-center gap-1.5">
-                      <Cpu className="h-3.5 w-3.5 text-telemetry" />
+                    <h3 className="text-xs font-mono uppercase text-white font-bold mb-1">
                       EVOLUTIONARY CONTROL DECK
                     </h3>
                     <p className="text-[10px] font-mono text-gray-500 leading-normal mb-3">
@@ -579,8 +559,7 @@ export default function App() {
 
                         {/* Active Compute Ticker Console logs */}
                         <div className="flex-1 border border-obsidian-carbon bg-black p-2 flex flex-col overflow-hidden">
-                          <div className="flex items-center gap-1.5 border-b border-obsidian-carbon pb-1 mb-1 font-mono text-[9px] text-gray-500 uppercase">
-                            <Terminal className="h-3 w-3 text-telemetry" />
+                          <div className="border-b border-obsidian-carbon pb-1 mb-1 font-mono text-[9px] text-gray-500 uppercase">
                             Active Compute Log Output
                           </div>
                           <div
@@ -612,10 +591,53 @@ export default function App() {
                                 onSelectStrategy={handleSelectStrategy}
                               />
                             </div>
+                            {selectedStrategy && (
+                              <div className="bg-obsidian-charcoal border border-telemetry/40 p-3 font-mono text-[10px]">
+                                <div className="text-[10px] font-bold text-telemetry uppercase tracking-wider mb-2 border-b border-obsidian-carbon pb-1 flex justify-between select-none">
+                                  <span>Strategy Financial Intelligence</span>
+                                  <span className="text-isotope">ACTIVE ANALYSIS</span>
+                                </div>
+                                <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                                  <div className="flex flex-col">
+                                    <span className="text-gray-500 uppercase text-[8px]">Estimated Capex</span>
+                                    <span className="text-xs font-bold text-white font-mono mt-0.5">
+                                      {new Intl.NumberFormat('en-IN', {
+                                        style: 'currency',
+                                        currency: 'INR',
+                                        maximumFractionDigits: 0
+                                      }).format(selectedStrategy.estimated_capex_inr)}
+                                    </span>
+                                  </div>
+                                  <div className="flex flex-col">
+                                    <span className="text-gray-500 uppercase text-[8px]">Annual Savings</span>
+                                    <span className="text-xs font-bold text-isotope font-mono mt-0.5">
+                                      {new Intl.NumberFormat('en-IN', {
+                                        style: 'currency',
+                                        currency: 'INR',
+                                        maximumFractionDigits: 0
+                                      }).format(selectedStrategy.annual_energy_savings_inr)}/yr
+                                    </span>
+                                  </div>
+                                  <div className="flex flex-col">
+                                    <span className="text-gray-500 uppercase text-[8px]">Carbon Offset</span>
+                                    <span className="text-xs font-bold text-plasma font-mono mt-0.5">
+                                      {selectedStrategy.carbon_offset_tons.toLocaleString('en-IN', { maximumFractionDigits: 2 })} Tons/yr
+                                    </span>
+                                  </div>
+                                  <div className="flex flex-col">
+                                    <span className="text-gray-500 uppercase text-[8px]">Payback Period</span>
+                                    <span className="text-xs font-bold text-yellow-400 font-mono mt-0.5">
+                                      {selectedStrategy.annual_energy_savings_inr > 0 
+                                        ? `${(selectedStrategy.estimated_capex_inr / selectedStrategy.annual_energy_savings_inr).toFixed(1)} Years`
+                                        : 'Infinity'}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
                           </div>
                         ) : (
                           <div className="flex-1 flex flex-col items-center justify-center text-center p-4 border border-dashed border-obsidian-carbon bg-obsidian-void font-mono text-[10px] text-gray-600 leading-normal mb-3">
-                            <Cpu className="h-6 w-6 text-gray-700 mb-2" />
                             TARGET GRID HEXAGON AND SELECT RUN OPTIMIZATION SWEEP TO COMPILE TRADE-OFF FRONTIERS.
                           </div>
                         )}
@@ -625,7 +647,7 @@ export default function App() {
                           disabled={!selectedCell}
                           className="w-full py-2.5 bg-telemetry hover:bg-cyan-400 text-black font-mono text-xs font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50"
                         >
-                          <Target className="h-4 w-4" /> RUN OPTIMIZATION SWEEP
+                          RUN OPTIMIZATION SWEEP
                         </button>
                       </div>
                     )}

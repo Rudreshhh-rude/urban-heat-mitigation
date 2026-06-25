@@ -1,4 +1,5 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+# Trigger reload for pruned spatial grid
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 from contextlib import asynccontextmanager
@@ -146,7 +147,10 @@ async def optimize_live(websocket: WebSocket):
                         "delta_ndvi": round(sol["delta_ndvi"], 4),
                         "delta_albedo": round(sol["delta_albedo"], 4),
                         "lst_drop": round(sol["lst_drop"], 4),
-                        "cost": round(sol["cost"], 4)
+                        "cost": round(sol["cost"], 4),
+                        "estimated_capex_inr": round(sol["estimated_capex_inr"], 2),
+                        "annual_energy_savings_inr": round(sol["annual_energy_savings_inr"], 2),
+                        "carbon_offset_tons": round(sol["carbon_offset_tons"], 4)
                     })
                 await websocket.send_json({
                     "status": "complete",

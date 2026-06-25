@@ -1,6 +1,56 @@
 import numpy as np
 import torch
 
+def calculate_financial_metrics(lst_drop, cost, building_density):
+    """
+    Translates biophysical intervention outcomes into realistic financial and carbon metrics.
+    
+    Parameters:
+    -----------
+    lst_drop : float
+        Predicted Land Surface Temperature (LST) drop in °C.
+    cost : float
+        Abstract intervention cost metric (in Crores INR).
+    building_density : float
+        Building density of the cell (0.0 to 1.0).
+        
+    Returns:
+    --------
+    metrics : dict
+        Dict containing estimated_capex_inr, annual_energy_savings_inr, and carbon_offset_tons.
+    """
+    # 1. Map abstract cost metrics (Crores INR) to absolute Capex (INR)
+    estimated_capex_inr = max(0.0, float(cost) * 1e7)
+    
+    # 2. Estimate local building HVAC cooling load savings
+    # Hexagon area at resolution 9 is ~0.1 km2 = 100,000 m2
+    cell_area_m2 = 100000.0
+    building_footprint_m2 = max(0.0, float(building_density)) * cell_area_m2
+    
+    # Assumed baseline cooling energy usage: 50 kWh per m2 of building footprint per year
+    baseline_cooling_kwh_per_m2_year = 50.0
+    # Average commercial/residential utility rate in Bengaluru: 8.0 INR per kWh
+    electricity_rate_inr_per_kwh = 8.0
+    
+    # Baseline annual HVAC utility cost for the building envelope in this cell
+    baseline_cooling_cost_inr = building_footprint_m2 * baseline_cooling_kwh_per_m2_year * electricity_rate_inr_per_kwh
+    
+    # Energy savings: Each 1°C drop in surface temperature yields an estimated 2.5% reduction in cooling load
+    savings_percentage = max(0.0, float(lst_drop)) * 0.025
+    annual_energy_savings_inr = baseline_cooling_cost_inr * savings_percentage
+    
+    # 3. Calculate carbon offset (Tons of CO2 equivalent)
+    # CO2 emission factor for Indian grid electricity: ~0.82 kg CO2 per kWh
+    carbon_intensity_kg_per_kwh = 0.82
+    annual_energy_savings_kwh = annual_energy_savings_inr / electricity_rate_inr_per_kwh if electricity_rate_inr_per_kwh > 0 else 0.0
+    carbon_offset_tons = (annual_energy_savings_kwh * carbon_intensity_kg_per_kwh) / 1000.0
+    
+    return {
+        "estimated_capex_inr": estimated_capex_inr,
+        "annual_energy_savings_inr": annual_energy_savings_inr,
+        "carbon_offset_tons": carbon_offset_tons
+    }
+
 def optimize_cell_intervention(cell_data, model, scaler, generations=50, pop_size=100):
     """
     Runs a multi-objective genetic optimization (NSGA-II) sweep to find the Pareto-optimal
@@ -259,11 +309,15 @@ def optimize_cell_intervention(cell_data, model, scaler, generations=50, pop_siz
     
     pareto_front = []
     for idx in pareto_indices:
+        metrics = calculate_financial_metrics(lst_drops[idx], costs[idx], bd_base)
         pareto_front.append({
             "delta_ndvi": float(genes[idx, 0]),
             "delta_albedo": float(genes[idx, 1]),
             "lst_drop": float(lst_drops[idx]),
-            "cost": float(costs[idx])
+            "cost": float(costs[idx]),
+            "estimated_capex_inr": metrics["estimated_capex_inr"],
+            "annual_energy_savings_inr": metrics["annual_energy_savings_inr"],
+            "carbon_offset_tons": metrics["carbon_offset_tons"]
         })
         
     # Remove duplicate solutions to clean up Pareto front
@@ -487,11 +541,15 @@ def optimize_cell_intervention_generator(cell_data, model, scaler, generations=5
     
     pareto_front = []
     for idx in pareto_indices:
+        metrics = calculate_financial_metrics(lst_drops[idx], costs[idx], bd_base)
         pareto_front.append({
             "delta_ndvi": float(genes[idx, 0]),
             "delta_albedo": float(genes[idx, 1]),
             "lst_drop": float(lst_drops[idx]),
-            "cost": float(costs[idx])
+            "cost": float(costs[idx]),
+            "estimated_capex_inr": metrics["estimated_capex_inr"],
+            "annual_energy_savings_inr": metrics["annual_energy_savings_inr"],
+            "carbon_offset_tons": metrics["carbon_offset_tons"]
         })
         
     # Remove duplicate solutions to clean up Pareto front

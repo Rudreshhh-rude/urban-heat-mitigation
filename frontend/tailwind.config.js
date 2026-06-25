@@ -8,18 +8,18 @@ export default {
     extend: {
       colors: {
         obsidian: {
-          void: '#050507',
-          charcoal: '#0e0e12',
-          carbon: '#16161f'
+          void: '#09090b',       // Zinc Jet (background)
+          charcoal: '#18181b',   // Zinc Oxide (secondary panels)
+          carbon: '#27272a'      // Muted Zinc Gridlines/Borders
         },
-        telemetry: '#00f0ff',
-        plasma: '#ff5a00',
-        crimson: '#de0a26',
-        isotope: '#39ff14'
+        telemetry: '#d97706',    // High-Vis Industrial Amber (Chroma)
+        plasma: '#71717a',       // Muted Zinc
+        crimson: '#71717a',      // Muted Zinc
+        isotope: '#d97706'       // High-Vis Industrial Amber (Chroma)
       },
       fontFamily: {
-        sans: ['Geist', 'Inter', 'system-ui', 'sans-serif'],
-        mono: ['"JetBrains Mono"', 'monospace'],
+        sans: ['Roboto', 'sans-serif'],
+        mono: ['Roboto', 'sans-serif'],
       }
     },
   },
