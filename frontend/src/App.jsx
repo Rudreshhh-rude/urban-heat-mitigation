@@ -8,6 +8,7 @@ import ParetoPlot from './components/ParetoPlot';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api';
 
 export default function App() {
+  const [booting, setBooting] = useState(true);
   const [activeTab, setActiveTab] = useState('optimization'); // 'diagnostics' | 'optimization'
   const [activeLayer, setActiveLayer] = useState('lst'); // 'lst' | 'ndvi' | 'albedo' | 'building'
 
@@ -41,6 +42,14 @@ export default function App() {
   // WebSocket reference
   const wsRef = useRef(null);
   const logTerminalRef = useRef(null);
+
+  // Boot timer loop (1200ms)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setBooting(false);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Load grid GeoJSON from backend on mount
   useEffect(() => {
@@ -166,6 +175,23 @@ export default function App() {
     setIsOptimizing(false);
     setConsoleLogs(prev => [...prev, `[SYSTEM] User halted evolutionary run.`]);
   };
+
+  if (booting) {
+    return (
+      <div 
+        className="fixed inset-0 z-50 bg-[#09090b] text-[#71717a] p-6 text-[11px] font-sans flex flex-col justify-start items-start select-none"
+        style={{ fontFamily: "'Roboto', sans-serif" }}
+      >
+        <div className="flex flex-col gap-1 text-left leading-normal whitespace-pre-wrap">
+          <div>[SYS_BOOT] INITIALIZING BENGALURU THERMAL OBSERVATORY CONSOLE...</div>
+          <div>[DATA_ENG] INGESTING URBAN H3 FEATURE MATRIX // CACHED CORES: 5,778</div>
+          <div>[WEIGHTS]  VALIDATING PIML_URBAN_MODEL.PT TENSOR BOUNDARY REGULATORS... PASS</div>
+          <div>[MAP_CORE] LOADING MUNICIPAL BBMP SPATIAL MASK DATASETS...</div>
+          <div>[NETWORK]  ESTABLISHING LIVE WEBSOCKET TUNNEL -&gt; SYS_NODE: BGLR_01 [LATENCY: 14ms]</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-obsidian-void text-gray-400 font-sans flex flex-col antialiased">
