@@ -84,8 +84,11 @@ if allowed_origins_env:
     allowed_origins = [origin.strip() for origin in allowed_origins_env.split(",") if origin.strip()]
 else:
     allowed_origins = [
+        "http://localhost:3000",
         "http://localhost:5173",
-        "http://127.0.0.1:5173"
+        "http://localhost:8000",
+        "http://127.0.0.1:5173",
+        "https://urban-heat-mitigation-jade.vercel.app"
     ]
 
 app.add_middleware(

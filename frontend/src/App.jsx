@@ -6,7 +6,7 @@ import MapComponent from './components/MapComponent';
 import ParetoPlot from './components/ParetoPlot';
 
 // For HTTP Requests (Axios / Fetch)
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000').replace(/\/+$/, '');
 
 // For Live WebSockets
 const WS_BASE = API_BASE.replace('http', 'ws');
