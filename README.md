@@ -1,8 +1,31 @@
 # Bengaluru Urban Heat Mitigation Observatory
 
-An ultra-premium, full-stack biophysical modeling and spatial optimization platform designed to evaluate and mitigate the Urban Heat Island (UHI) effect in Bengaluru, India. 
+An ultra-premium, full-stack biophysical modeling and spatial optimization platform designed to evaluate and mitigate the Urban Heat Island (UHI) effect in Bengaluru, India.
 
-The application utilizes a **Physics-Informed Machine Learning (PIML)** model to predict Land Surface Temperature (LST) anomalies and implements an **NSGA-II (Non-dominated Sorting Genetic Algorithm II)** evolutionary solver to run real-time intervention sweeps (optimizing canopy expansion vs. solar reflectivity albedo versus budget costs) over 7,158 urban H3 cells.
+The application utilizes a **Physics-Informed Machine Learning (PIML)** model to predict Land Surface Temperature (LST) anomalies and implements an **NSGA-II (Non-dominated Sorting Genetic Algorithm II)** evolutionary solver to run real-time intervention sweeps (optimizing canopy expansion vs. solar reflectivity albedo versus budget costs) over 5,778 H3 municipal cells.
+
+## System Core Architecture
+
+| Component / Metric | Specification |
+| :--- | :--- |
+| **Spatial Cells** | 5,778 H3 municipal cells |
+| **Grid Resolution** | Uber H3 Res-9 resolution |
+| **Biophysical Model** | PyTorch neural network (`UrbanThermalMLP`) |
+| **Optimization Solver** | NSGA-II solver |
+
+## Production Stack Quickstart
+
+The three lines of Docker code required to run the platform locally:
+
+```bash
+docker compose build
+docker compose up -d
+docker compose logs -f
+```
+
+## The Financial ROI Metrics
+
+The platform maps abstract costs to true INR CapEx, grid carbon offsets ($0.82\text{ kg CO}_2/\text{kWh}$), and HVAC utility load reductions ($2.5\%$ per $1^\circ\text{C}$).
 
 ---
 

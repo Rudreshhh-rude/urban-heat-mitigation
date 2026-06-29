@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 const MAP_STYLE_URL = import.meta.env.VITE_MAP_STYLE_URL || 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
 
 const MapComponent = React.memo(function MapComponent({ gridData, activeLayer, selectedCellId, onSelectCell }) {
@@ -14,7 +15,7 @@ const MapComponent = React.memo(function MapComponent({ gridData, activeLayer, s
 
     // Default center for Bengaluru coordinates
     const defaultCenter = [77.62, 12.97];
-    
+
     const map = new maplibregl.Map({
       container: mapContainerRef.current,
       style: MAP_STYLE_URL,

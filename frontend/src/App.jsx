@@ -5,7 +5,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import MapComponent from './components/MapComponent';
 import ParetoPlot from './components/ParetoPlot';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api';
+// For HTTP Requests (Axios / Fetch)
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+
+// For Live WebSockets
+const WS_BASE = API_BASE.replace('http', 'ws');
 
 export default function App() {
   const [booting, setBooting] = useState(true);
@@ -55,7 +59,8 @@ export default function App() {
   useEffect(() => {
     console.log('[API] Fetching unified spatial grid layout...');
     setIsLoadingGrid(true);
-    fetch(`${API_BASE_URL}/grid`)
+    const fetchUrl = API_BASE.endsWith('/api') ? `${API_BASE}/grid` : `${API_BASE}/api/grid`;
+    fetch(fetchUrl)
       .then(res => {
         if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
         return res.json();
@@ -117,11 +122,11 @@ export default function App() {
     ]);
 
     let wsUrl;
-    if (API_BASE_URL.startsWith('http')) {
-      wsUrl = API_BASE_URL.replace(/^http/, 'ws') + '/optimize-live';
+    if (WS_BASE.startsWith('ws')) {
+      wsUrl = WS_BASE.endsWith('/api') ? `${WS_BASE}/optimize-live` : `${WS_BASE}/api/optimize-live`;
     } else {
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      wsUrl = `${protocol}//${window.location.host}${API_BASE_URL}/optimize-live`;
+      wsUrl = `${protocol}//${window.location.host}${WS_BASE}/optimize-live`;
     }
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;

@@ -96,6 +96,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/api/health")
+async def health():
+    return {"status": "online"}
+
 @app.get("/api/grid")
 async def get_grid():
     if geojson_payload is None:
